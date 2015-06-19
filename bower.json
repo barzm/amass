@@ -1,0 +1,21 @@
+{
+  "name": "amass",
+  "version": "1.0.0",
+  "homepage": "https://github.com/mbarzizza/amass",
+  "authors": [
+    "Michael Barzizza & Robbie Ferguson"
+  ],
+  "main": "app.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jcanvas": "~14.11.25",
+    "lodash": "~3.9.3"
+  }
+}

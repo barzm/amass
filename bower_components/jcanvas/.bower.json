@@ -1,0 +1,39 @@
+{
+  "name": "jcanvas",
+  "version": "14.11.25",
+  "main": "jcanvas.js",
+  "description": "jCanvas brings jQuery's powerful syntax and capability to the HTML5 canvas. Quickly create canvas-based apps that can utilize layers, animations, events, and much more. jCanvas works on all modern browsers and platforms, including iOS and Android.",
+  "keywords": [
+    "canvas",
+    "html5",
+    "jquery",
+    "events",
+    "animation"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/*.txt",
+    ".gitignore",
+    "build",
+    "test",
+    "*.md",
+    "*.json"
+  ],
+  "dependencies": {
+    "jquery": ">=1.4.0"
+  },
+  "devDependencies": {
+    "qunit": ">=1.2.0"
+  },
+  "homepage": "https://github.com/caleb531/jcanvas",
+  "_release": "14.11.25",
+  "_resolution": {
+    "type": "version",
+    "tag": "14.11.25",
+    "commit": "c08bbbee5da5e8744fbdd2c0c0c46fc3ebe90864"
+  },
+  "_source": "git://github.com/caleb531/jcanvas.git",
+  "_target": "~14.11.25",
+  "_originalSource": "jcanvas",
+  "_direct": true
+}
