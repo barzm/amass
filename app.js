@@ -8,6 +8,8 @@ module.exports = app;
 
 
 app.use(express.static('bower_components'));
+app.use(express.static('node_modules'));
+
 app.use(express.static('public'));
 app.get('/',function(req,res,next){
 	res.sendFile(__dirname+ '/public/index.html'); 
