@@ -32,6 +32,7 @@ var Blob = function(game, settings) {
 
 $(window).on('load', function() {
 	initGame();
+
 })
 
 window.onresize = function() {
@@ -40,9 +41,11 @@ window.onresize = function() {
 
 function initGame() {
 	resetSize();
+	console.log(gameSession);
 	window.scrollTo(midX, midY)
-	gameSession = new Game();
+	gameSession = gameSession || new Game();
 	addPlayer("my name"); 
+
 }
 
 function resetSize() {
