@@ -7,15 +7,24 @@ var tempCanvas = document.getElementById('blobCanvas');
 var ctx = tempCanvas.getContext('2d');
 tempCanvas.tabIndex = 1;
 var midX, midY;
-var X, Y, offsetX = 0, offsetY = 0;
+var X, Y, W, H, offsetX = 0, offsetY = 0;
 
+
+// var background = new Image();
+// background.src = '/images/grid.jpg';
+
+// background.onload = function () {
+// 	ctx.drawImage(background, 0, 0);
+// }
 window.onresize=function(){
 	resetSize(); 
 }
 
 function resetSize(){
-	var height = $(window).height()*2;
-	var width = $(window).width()*2;
+	W = $(window).width()/2;
+	H = $(window).height()/2;
+	var height = $(window).height()*10;
+	var width = $(window).width()*10;
 	tempCanvas.width=width; 
 	tempCanvas.height=height;
 	mousex = X = midX = Math.floor(width/2); 
@@ -24,6 +33,7 @@ function resetSize(){
 
 function initGame(){
 	resetSize(); 
+	window.scrollTo(midX, midY)
 	$canvas.drawArc({
 		fillStyle: '#00FF99',
 		layer:'true',
@@ -35,6 +45,7 @@ function initGame(){
 		mousex = event.pageX; 
 		mousey = event.pageY; 
 	})
+
 }
 function redraw(){
 	setInterval(function(){
@@ -62,11 +73,7 @@ function move () {
 	var moveY = absDiff * diffY / ((diffX + diffY)*40);
 	X = X > mousex ? X - moveX : X + moveX;
 	Y = Y > mousey ? Y - moveY : Y + moveY;
-	offsetX ++;
-	offsetY ++;
-	window.scrollTo(offsetX, offsetY);
-	// wrapper.scrollRight(X);
-	// wrapper.scrollBottom(Y);
+	window.scrollTo(X-W, Y-H);
 }
 
 
