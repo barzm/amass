@@ -8,7 +8,7 @@ var X, Y, W, H, globalHeight, globalWidth, mousex, mousey, midX, midY, offsetX =
 
 var Game = function() {
 	console.log(midX, midY);
-	this.c = new Coquette(this, "blobCanvas", globalHeight, globalWidth, "grey");
+	this.c = new Coquette(this, "blobCanvas", globalHeight, globalWidth, "transparent");
 	this.c.entities.create(Blob, {
 		center: {
 			x: midX/2,
@@ -28,6 +28,7 @@ var Game = function() {
 			this.center.x = this.center.x > mouse.x ? this.center.x - moveX : this.center.x + moveX;
 			this.center.y = this.center.y > mouse.y ? this.center.y - moveY : this.center.y + moveY;
 			window.scrollTo(this.center.x - W, this.center.y - H);
+			$canvas.clearCanvas();
 		},
 
 		collision: function(other) {
