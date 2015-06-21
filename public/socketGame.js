@@ -6,15 +6,15 @@ socket.on('drawPlayers', function (serverPlayers) {
 })
 
 socket.on('newPlayer', function (player) {
-	console.log('Client receiving new player: ', player);
-	console.log(gameSession.c.entities.all());
 	player.broadcast = false;
 	addPlayer(null, player);
 })
 
 socket.on('allPlayers', function (players) {
+	console.log('receiving all plalyers fuck ',players);
 	if (players) {
 		for (var player in players) {
+			player.broadcast = false;
 			addPlayer(null, player);
 		}
 	}

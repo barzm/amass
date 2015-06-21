@@ -44,10 +44,9 @@ io.on('connection',function(socket){
 	socket.on('newPlayer', function (player) {
 		console.log("New Player!");
 		player = JSON.parse(player);
-		console.log(player);
-		players[player.name] = player;
 		socket.broadcast.emit('newPlayer', player);
 		socket.emit('allPlayers', players);
+		players[player.name] = player;
 	})
 
 
