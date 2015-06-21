@@ -45,7 +45,7 @@ window.onresize = function() {
 
 function initGame() {
 	resetSize();
-	console.log(gameSession);
+	console.log('gameSession', gameSession);
 	window.scrollTo(midX, midY)
 	gameSession = gameSession || new Game();
 	var name = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 10);
@@ -61,34 +61,3 @@ function resetSize() {
 	mousex = X = midX = Math.floor(globalWidth / 2);
 	mousey = Y = midY = Math.floor(globalHeight / 2);
 }
-
-// movement and player creation
-
-// function move() {
-// 	var diffX = Math.abs(X - mousex);
-// 	var diffY = Math.abs(Y - mousey);
-// 	var absDiff = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
-// 	if (absDiff < 2) return;
-// 	absDiff = absDiff > 300 ? 300 : absDiff;
-// 	absDiff = absDiff < 150 ? 150 : absDiff;
-// 	var moveX = absDiff * diffX / ((diffX + diffY) * 40);
-// 	var moveY = absDiff * diffY / ((diffX + diffY) * 40);
-// 	X = X > mousex ? X - moveX : X + moveX;
-// 	Y = Y > mousey ? Y - moveY : Y + moveY;
-// 	window.scrollTo(X - W, Y - H);
-// }
-
-// function redraw() {
-// 	setInterval(function() {
-// 		$canvas.clearCanvas();
-// 		move();
-// 		$canvas.drawArc({
-// 			fillStyle: '#00FF99',
-// 			layer: 'true',
-// 			name: 'circle1',
-// 			x: X || midX,
-// 			y: Y || midY,
-// 			radius: 50
-// 		});
-// 	}, 16.66667)
-// }

@@ -1,27 +1,21 @@
-var express= require('express'); 
-var app = express(); 
-var server = require('http').Server(app); 
-var io = require('socket.io')(server); 
+var express= require('express');
+var app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
 var _ = require('lodash');
-// var livereload = require('livereload'); 
+// var livereload = require('livereload');
 // lrserver = livereload.createServer();
-// lrserver.watch('.'); 
-server.listen(1337); 
+// lrserver.watch('.');
+server.listen(1337);
 app.use(express.static('bower_components'));
 app.use(express.static('node_modules'));
 app.use(express.static('public'));
 app.get('/',function(req,res,next){
-	res.sendFile(__dirname+ '/public/index.html'); 
+	res.sendFile(__dirname+ '/public/index.html');
 })
-
 var players = {};
-
-
-
 io.on('connection',function(socket){
 	console.log('socket connected');
-	
-
 	socket.on('playerMove', function (data) {
 		var P = players[data.name];
 		var diffX = Math.abs(P.center.x - data.mouse.x);
@@ -36,11 +30,9 @@ io.on('connection',function(socket){
 		P.center.y = P.center.y > data.mouse.y ? P.center.y - moveY : P.center.y + moveY;
 		players[data.name].x = data.x;
 		players[data.name].y = data.y;
-		socket.emit('drawPlayers', players);
 		socket.broadcast.emit('drawPlayers', players);
+		socket.emit('drawPlayers', players);
 	})
-	
-
 	socket.on('newPlayer', function (player) {
 		console.log("New Player!");
 		player = JSON.parse(player);
@@ -48,10 +40,6 @@ io.on('connection',function(socket){
 		socket.emit('allPlayers', players);
 		players[player.name] = player;
 	})
-
-
 })
-
-
 
 module.exports = app;

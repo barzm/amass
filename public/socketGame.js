@@ -6,14 +6,16 @@ socket.on('drawPlayers', function (serverPlayers) {
 })
 
 socket.on('newPlayer', function (player) {
+	console.log("newPlayer heard", player);
 	player.broadcast = false;
 	addPlayer(null, player);
 })
 
 socket.on('allPlayers', function (players) {
-	console.log('receiving all plalyers fuck ',players);
+	console.log('receiving all players',players);
 	if (players) {
 		for (var player in players) {
+			console.log(player);
 			player.broadcast = false;
 			addPlayer(null, player);
 		}

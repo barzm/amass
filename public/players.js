@@ -1,7 +1,6 @@
 var colors = ['#1ABC9C','#2ECC71','#3498DB','#9B59B6','#E74C3C','#F1C40F'];
 function addPlayer (name, config) {
 	var settings = {
-
 		update: function () {
 			$canvas.clearCanvas();
 			this.center = getServerPosition(this.name);
