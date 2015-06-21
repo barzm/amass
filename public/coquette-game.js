@@ -2,8 +2,13 @@ var $canvas = $("canvas");
 var wrapper = document.getElementById('wrapper');
 var tempCanvas = document.getElementById('blobCanvas');
 var ctx = tempCanvas.getContext('2d');
-var X, Y, W, H, globalHeight, globalWidth, mousex, mousey, midX, midY, offsetX = 0, offsetY = 0,gameSession;
+var X, Y, W, H, currentPlayerPositions, globalHeight, globalWidth, mousex, mousey, midX, midY, offsetX = 0, offsetY = 0,gameSession;
 // Page management
+
+$(window).on('mousemove',function(event){
+	mousex = event.pageX;
+	mousey = event.pageY;
+})
 
 var Game = function() {
 	this.c = new Coquette(this, "blobCanvas", globalHeight, globalWidth, "transparent");
@@ -32,7 +37,6 @@ var Blob = function(game, settings) {
 
 $(window).on('load', function() {
 	initGame();
-
 })
 
 window.onresize = function() {
@@ -44,7 +48,8 @@ function initGame() {
 	console.log(gameSession);
 	window.scrollTo(midX, midY)
 	gameSession = gameSession || new Game();
-	addPlayer("my name"); 
+	var name = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 10);
+	addPlayer(name); 
 
 }
 

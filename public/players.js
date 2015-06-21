@@ -1,26 +1,16 @@
 var colors = ['#1ABC9C','#2ECC71','#3498DB','#9B59B6','#E74C3C','#F1C40F'];
 function addPlayer (name, config) {
 	var settings = {
-		update: function() {
 
-			var mouse = gameSession.c.inputter.getMousePosition() || {x: 0, y: 0};
-			var diffX = Math.abs(this.center.x - mouse.x);
-			var diffY = Math.abs(this.center.y - mouse.y);
-			var absDiff = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
-			if (absDiff < 2) return;
-			absDiff = absDiff > 300 ? 300 : absDiff;
-			absDiff = absDiff < 150 ? 150 : absDiff;
-			var moveX = absDiff * diffX / ((diffX + diffY) * 40);
-			var moveY = absDiff * diffY / ((diffX + diffY) * 40);
-			this.center.x = this.center.x > mouse.x ? this.center.x - moveX : this.center.x + moveX;
-			this.center.y = this.center.y > mouse.y ? this.center.y - moveY : this.center.y + moveY;
-			window.scrollTo(this.center.x - W, this.center.y - H);
-			socket.emit('playerMove', {name: this.name, x: this.center.x, y: this.center.y})
+		update: function () {
 			$canvas.clearCanvas();
-			// console.log(gameSession.c.entities.all());
+			this.center = getServerPosition(this.name);
+			if (!config) {
+				socket.emit('playerMove', {name: this.name, mouse: {x: mousex,y: mousey}})
+				window.scrollTo(this.center.x - W, this.center.y - H)
+			}
 		},
 		collision: function(other) {
-			// other.center.y = this.center.y; // follow the player
 		}
 	};
 
@@ -28,7 +18,9 @@ function addPlayer (name, config) {
 		for (var key in config) {
 			settings[key] = config[key];
 		}
+		settings.broadcast = false;
 	} else {
+		settings.broadcast = true;
 		settings.name = name;
 		settings.center = {
 			x: midX/2+Math.random()*200,
@@ -38,11 +30,25 @@ function addPlayer (name, config) {
 	}
 
 	var newPlayer = gameSession.c.entities.create(Blob, settings);
-	// console.log(newPlayer);
-	socket.emit('newPlayer', JSON.stringify(newPlayer));
+
+	if (newPlayer.broadcast) 
+		socket.emit('newPlayer', JSON.stringify(newPlayer));
+
 }
 
 function getRandomColor(){
 	return colors[Math.floor(Math.random()*6)];
 }
 
+function getServerPosition (name) {
+	if (!currentPlayerPositions || !currentPlayerPositions[name]) {
+		return {
+			x: midX/2,
+			y: midY
+		}
+	}
+	return {
+		x: currentPlayerPositions[name].center.x,
+		y: currentPlayerPositions[name].center.y
+	}
+}
