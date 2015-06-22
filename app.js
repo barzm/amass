@@ -12,8 +12,8 @@ app.use(express.static('node_modules'));
 app.use(express.static('public'));
 
 var appEnv = cfenv.getAppEnv();
-
-server.listen(appEnv.port, appEnv.bind);
+server.listen(1337);
+// server.listen(appEnv.port, appEnv.bind);
 
 app.get('/', function(req, res, next) {
 	res.sendFile(__dirname + '/public/index.html');
@@ -75,7 +75,8 @@ io.on('connection', function(socket) {
 		player.size = 30;
 		player.socketId = socket.id;
 		if (!food.length) {
-			makeNom(300);
+			console.log('hello')
+			makeNom(50);
 		}
 		socket.broadcast.emit('newPlayer', player);
 		socket.emit('allPlayers', players);
