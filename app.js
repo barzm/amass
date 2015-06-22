@@ -3,8 +3,7 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var _ = require('lodash');
-var SAT = require('sat'); 
-// console.log(SAT);
+var SAT = require('sat');
 // var livereload = require('livereload');
 // lrserver = livereload.createServer();
 // lrserver.watch('.');
@@ -19,14 +18,14 @@ var V = SAT.Vector;
 var C = SAT.Circle;
 var players = {};
 var food = [];
-var collisions=[];
+var collisions = [];
 
 io.on('connection', function(socket) {
 	socket.on('playerMove', function(data) {
 		var P = players[data.name];
 		var diffX = Math.abs(P.center.x - data.mouse.x);
 		var diffY = Math.abs(P.center.y - data.mouse.y);
-		var absDiff = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
+		var absDiff = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2)) ;
 		if (absDiff < 5) return;
 		absDiff = absDiff > 300 ? 300 : absDiff;
 		absDiff = absDiff < 150 ? 150 : absDiff;
@@ -36,18 +35,23 @@ io.on('connection', function(socket) {
 		P.center.y = P.center.y > data.mouse.y ? P.center.y - moveY : P.center.y + moveY;
 		P.sat.pos.x = P.center.x;
 		P.sat.pos.y = P.center.y;
-		
-		P.sat.r =  massToRadius(P.size);
-		testCollision(P);
+
+		P.sat.r = massToRadius(P.size);
+		var toDelete = testCollision(P);
+		if (toDelete) {
+			socket.broadcast.emit('delete', toDelete);
+			socket.emit('delete', toDelete);
+		}
 		socket.emit('drawPlayers', players);
 		socket.broadcast.emit('drawPlayers', players);
 	})
 	socket.on('newPlayer', function(player) {
 		player = JSON.parse(player);
-		player.size = Math.floor(Math.random()*100);
+		player.size = Math.floor(Math.random() * 100);
+		player.socketId = socket.id;
+		console.log(player.socketId);
 		socket.broadcast.emit('newPlayer', player);
 		socket.emit('allPlayers', players);
-		// player.sat = new SAT.circle(new SAT.V(player.center.x,player.center.y),25);
 		var playerCircle = new C(
 			new V(player.center.x, player.center.y),
 			25);
@@ -55,24 +59,45 @@ io.on('connection', function(socket) {
 		players[player.name] = player;
 	});
 
+	socket.on('disconnect', function () {
+		_.forEach(players, function (user, key) {
+			if (user.socketId === socket.id) {
+				socket.emit('delete', user.name);
+				socket.broadcast.emit('delete', user.name);
+				delete players[user.name];
+			}
+		})
+	})
+
 })
 module.exports = app;
 
-function testCollision(currentUser){
-	_.forEach(players,function(value,key){
-		if(!(currentUser.name === value.name)){
+function testCollision(currentUser) {
+	var toDelete;
+	_.forEach(players, function(otherUser, key) {
+		if (!(currentUser.name === otherUser.name)) {
 			var response = new SAT.Response();
-			var collision =SAT.testCircleCircle(currentUser.sat,value.sat,response);
-			if(collision){
-				console.log(currentUser.size>value.size ? currentUser.name:value.name);
-				console.log('Collisision response   !!!!' , response);
+			var collision = SAT.testCircleCircle(currentUser.sat, otherUser.sat, response);
+			if (collision) {
+				if (currentUser.size * 1.1 > otherUser.size) {
+					currentUser.size += otherUser.size;
+					delete players[otherUser.name];
+					toDelete = otherUser.name;
+				} else if (otherUser.size * 1.1 > currentUser.size) {
+					otherUser.size += currentUser.size;
+					delete players[currentUser.name];
+					toDelete = currentUser.name;
+				}
 			}
 		}
 
 	})
+	return toDelete || null;
 }
-function massToRadius(m){
-	return Math.sqrt(m/Math.PI);
+
+
+function massToRadius(m) {
+	return Math.sqrt(m / Math.PI) * 5;
 }
 
 function makeNom() {

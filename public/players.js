@@ -7,14 +7,12 @@ function addPlayer (name, config) {
 
 			$canvas.clearCanvas();
 			this.center = getServerPosition(this.name);
+			this.size = getServerSize(this.name);
 			if (!config) {
 				socket.emit('playerMove', {name: this.name, mouse: {x: mousex,y: mousey}})
 				window.scrollTo(this.center.x - W, this.center.y - H)
 			}
 		}
-		// collision: function(other) {
-		// 	// socket.emit('collision',{first:this,second:other}); 
-		// }
 	};
 
 	if (config) {
@@ -52,5 +50,18 @@ function getServerPosition (name) {
 	return {
 		x: currentPlayerPositions[name].center.x,
 		y: currentPlayerPositions[name].center.y
+	}
+}
+
+function getServerSize (name) {
+	if (!currentPlayerPositions || !currentPlayerPositions[name]) {
+		return {
+			x: 50,
+			y: 50
+		}
+	}
+	return {
+		x: currentPlayerPositions[name].size,
+		y: currentPlayerPositions[name].size
 	}
 }
