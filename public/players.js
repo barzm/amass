@@ -1,16 +1,20 @@
 var colors = ['#1ABC9C','#2ECC71','#3498DB','#9B59B6','#E74C3C','#F1C40F'];
 function addPlayer (name, config) {
 	var settings = {
+		boundingBox: gameSession.c.collider.CIRCLE,
+		angle:0,
 		update: function () {
+
 			$canvas.clearCanvas();
 			this.center = getServerPosition(this.name);
 			if (!config) {
 				socket.emit('playerMove', {name: this.name, mouse: {x: mousex,y: mousey}})
 				window.scrollTo(this.center.x - W, this.center.y - H)
 			}
-		},
-		collision: function(other) {
 		}
+		// collision: function(other) {
+		// 	// socket.emit('collision',{first:this,second:other}); 
+		// }
 	};
 
 	if (config) {
