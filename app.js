@@ -4,10 +4,12 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var _ = require('lodash');
 var SAT = require('sat');
-// var livereload = require('livereload');
-// lrserver = livereload.createServer();
-// lrserver.watch('.');
-server.listen(1337);
+var cfenv = require('cfenv');
+
+var appEnv = cfenv.getAppEnv();
+var port = appEnv.port || 1337;
+server.listen(port, appEnv.bind);
+
 app.use(express.static('bower_components'));
 app.use(express.static('node_modules'));
 app.use(express.static('public'));
