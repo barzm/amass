@@ -14,8 +14,8 @@ app.get('/',function(req,res,next){
 	res.sendFile(__dirname+ '/public/index.html');
 })
 var players = {};
+var food = [];
 io.on('connection',function(socket){
-	console.log('socket connected');
 	socket.on('playerMove', function (data) {
 		var P = players[data.name];
 		var diffX = Math.abs(P.center.x - data.mouse.x);
@@ -30,16 +30,14 @@ io.on('connection',function(socket){
 		P.center.y = P.center.y > data.mouse.y ? P.center.y - moveY : P.center.y + moveY;
 		players[data.name].x = data.x;
 		players[data.name].y = data.y;
-		socket.broadcast.emit('drawPlayers', players);
 		socket.emit('drawPlayers', players);
+		socket.broadcast.emit('drawPlayers', players);
 	})
 	socket.on('newPlayer', function (player) {
-		console.log("New Player!");
 		player = JSON.parse(player);
 		socket.broadcast.emit('newPlayer', player);
 		socket.emit('allPlayers', players);
 		players[player.name] = player;
 	})
 })
-
 module.exports = app;

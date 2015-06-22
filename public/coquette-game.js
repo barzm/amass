@@ -3,7 +3,6 @@ var wrapper = document.getElementById('wrapper');
 var tempCanvas = document.getElementById('blobCanvas');
 var ctx = tempCanvas.getContext('2d');
 var X, Y, W, H, currentPlayerPositions, globalHeight, globalWidth, mousex, mousey, midX, midY, offsetX = 0, offsetY = 0,gameSession;
-// Page management
 
 $(window).on('mousemove',function(event){
 	mousex = event.pageX;
@@ -33,8 +32,6 @@ var Blob = function(game, settings) {
 		ctx.stroke();
 	};
 }
-
-
 $(window).on('load', function() {
 	initGame();
 })
@@ -42,22 +39,18 @@ $(window).on('load', function() {
 window.onresize = function() {
 	resetSize();
 }
-
 function initGame() {
 	resetSize();
-	console.log('gameSession', gameSession);
 	window.scrollTo(midX, midY)
-	gameSession = gameSession || new Game();
+	gameSession =  new Game();
 	var name = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 10);
 	addPlayer(name); 
-
 }
-
 function resetSize() {
 	W = $(window).width() / 2;
 	H = $(window).height() / 2;
-	globalWidth = $(window).width() * 10;
-	globalHeight = $(window).height() * 10;
+	globalWidth = $(window).width() * 2;
+	globalHeight = $(window).height() * 2;
 	mousex = X = midX = Math.floor(globalWidth / 2);
 	mousey = Y = midY = Math.floor(globalHeight / 2);
 }
