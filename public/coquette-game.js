@@ -63,8 +63,8 @@ function initGame() {
 function resetSize() {
 	W = $(window).width() / 2;
 	H = $(window).height() / 2;
-	globalWidth = 2000;
-	globalHeight = 2000;
+	globalWidth = 5000;
+	globalHeight = 5000;
 	mousex = X = midX = Math.floor(globalWidth / 2);
 	mousey = Y = midY = Math.floor(globalHeight / 2);
 }

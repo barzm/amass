@@ -1,11 +1,12 @@
 #blobCanvas {
 	position: absolute;
-	background-image: url("/images/small-grid.jpg");
+	background-image: url("/inflicted.jpg");
 
 }
 
 body {
 	overflow: hidden;
+	mouse: pointer;
 }
 
 #wrapper {
