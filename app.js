@@ -12,8 +12,13 @@ app.use(express.static('node_modules'));
 app.use(express.static('public'));
 
 var appEnv = cfenv.getAppEnv();
-var port = appEnv.port || 1337;
-server.listen(port, appEnv.bind);
+
+if (appEnv.bind === 'localhost') {
+	server.listen(1337);
+} else {
+	server.listen(appEnv.port, appEnv.bind);
+}
+
 
 app.get('/', function(req, res, next) {
 	res.sendFile(__dirname + '/public/index.html');
@@ -46,7 +51,6 @@ io.on('connection', function(socket) {
 		P.sat.r = P.size/2;
 		var toDelete = testCollision(P);
 		var foodToDelete = testEat(P); 
-		// console.log("Foodtodelete",foodToDelete); 
 		if(foodToDelete){
 			socket.broadcast.emit('deleteFood',foodToDelete); 
 			socket.emit('deleteFood',foodToDelete);
@@ -120,7 +124,6 @@ function testCollision(currentUser) {
 function testEat(currentUser) {
 	var toDelete; 
 	var tempUser = currentUser;
-	// tempUser.sat.r*=1.3;
 	_.forEach(food,function(foodItem,key){
 		var response = new SAT.Response();
 		var collision = SAT.testCircleCircle(tempUser.sat, foodItem, response);
@@ -134,10 +137,6 @@ function testEat(currentUser) {
 	return toDelete;
 }
 
-function massToRadius(m) {
-	// console.log('mass to radius' ,m);
-	return Math.sqrt(m / Math.PI) * 5;
-}
 
 function makeNom(num) {
 	newFood = [];

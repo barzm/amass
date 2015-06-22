@@ -20,7 +20,7 @@ socket.on('allPlayers', function (players) {
 })
 
 socket.on('delete', function (name) {
-	var users = gameSession.c.entities.all()
+	var users = gameSession.c.entities.all(Blob)
 	for (var user in users) {
 		if (users[user].name === name) {
 			gameSession.c.entities.destroy(users[user]);
@@ -34,13 +34,9 @@ socket.on('newFood', function(food){
 	});
 })
 socket.on('deleteFood',function(foodToDelete){
-	console.log("sadflkjasdf");
 	var gameFood = gameSession.c.entities.all(Nom);
-	console.log('gameFood',gameFood);
 	_.forEach(gameFood,function(cur){
-		console.log('cur', cur);
 		if(cur.pos.x === foodToDelete.pos.x && cur.pos.y === foodToDelete.pos.y){
-			console.log("Found nom to delete ");
 			gameSession.c.entities.destroy(cur);
 		}
 	})
