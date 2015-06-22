@@ -18,6 +18,7 @@ var V = SAT.Vector;
 var C = SAT.Circle;
 var players = {};
 var food = [];
+var newFood = []; 
 var collisions = [];
 
 io.on('connection', function(socket) {
@@ -43,10 +44,10 @@ io.on('connection', function(socket) {
 		if(foodToDelete){
 			socket.broadcast.emit('deleteFood',foodToDelete); 
 			socket.emit('deleteFood',foodToDelete);
-			makeNom(1)
+			socket.broadcast.emit('newFood',newFood); 
+			socket.emit('newFood',newFood);
 		}
 		if (toDelete) {
-			makeNom(10);
 			socket.broadcast.emit('delete', toDelete);
 			socket.emit('delete', toDelete);
 		}
@@ -69,9 +70,8 @@ io.on('connection', function(socket) {
 		player.sat = playerCircle;
 		players[player.name] = player;
 		var createdFood = makeNom(1);
-		socket.emit('newFood', food);
-		
-		socket.broadcast.emit('newFood', createdFood);
+		socket.emit('newFood', food)
+		socket.broadcast.emit('newFood', food);
 
 	});
 
@@ -120,10 +120,9 @@ function testEat(currentUser) {
 		var collision = SAT.testCircleCircle(tempUser.sat, foodItem, response);
 		if (collision) {
 			food.splice(key,1);
-			makeNom(1); 
 			currentUser.size+=3; 
+			makeNom();
 			toDelete = foodItem;
-			// return toDelete; 
 		}
 	})
 	return toDelete;
@@ -135,7 +134,7 @@ function massToRadius(m) {
 }
 
 function makeNom(num) {
-	var newFood = [];
+	newFood = [];
 	num = num || 1;
 	while (num > 0) {
 		var tempFood = new C(
