@@ -25,7 +25,7 @@ io.on('connection', function(socket) {
 		var P = players[data.name];
 		var diffX = Math.abs(P.center.x - data.mouse.x);
 		var diffY = Math.abs(P.center.y - data.mouse.y);
-		var absDiff = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2)) ;
+		var absDiff = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
 		if (absDiff < 5) return;
 		absDiff = absDiff > 300 ? 300 : absDiff;
 		absDiff = absDiff < 150 ? 150 : absDiff;
@@ -36,20 +36,31 @@ io.on('connection', function(socket) {
 		P.sat.pos.x = P.center.x;
 		P.sat.pos.y = P.center.y;
 
-		P.sat.r = massToRadius(P.size);
+		P.sat.r = P.size/2;
 		var toDelete = testCollision(P);
+		var foodToDelete = testEat(P); 
+		// console.log("Foodtodelete",foodToDelete); 
+		if(foodToDelete){
+			socket.broadcast.emit('deleteFood',foodToDelete); 
+			socket.emit('deleteFood',foodToDelete);
+			makeNom(1)
+		}
 		if (toDelete) {
+			makeNom(10);
 			socket.broadcast.emit('delete', toDelete);
 			socket.emit('delete', toDelete);
 		}
 		socket.emit('drawPlayers', players);
 		socket.broadcast.emit('drawPlayers', players);
+
 	})
 	socket.on('newPlayer', function(player) {
 		player = JSON.parse(player);
-		player.size = Math.floor(Math.random() * 100);
+		player.size = 30;
 		player.socketId = socket.id;
-		console.log(player.socketId);
+		if(!food.length){
+			makeNom(50); 
+		}
 		socket.broadcast.emit('newPlayer', player);
 		socket.emit('allPlayers', players);
 		var playerCircle = new C(
@@ -57,10 +68,15 @@ io.on('connection', function(socket) {
 			25);
 		player.sat = playerCircle;
 		players[player.name] = player;
+		var createdFood = makeNom(1);
+		socket.emit('newFood', food);
+		
+		socket.broadcast.emit('newFood', createdFood);
+
 	});
 
-	socket.on('disconnect', function () {
-		_.forEach(players, function (user, key) {
+	socket.on('disconnect', function() {
+		_.forEach(players, function(user, key) {
 			if (user.socketId === socket.id) {
 				socket.emit('delete', user.name);
 				socket.broadcast.emit('delete', user.name);
@@ -95,14 +111,39 @@ function testCollision(currentUser) {
 	return toDelete || null;
 }
 
+function testEat(currentUser) {
+	var toDelete; 
+	var tempUser = currentUser;
+	// tempUser.sat.r*=1.3;
+	_.forEach(food,function(foodItem,key){
+		var response = new SAT.Response();
+		var collision = SAT.testCircleCircle(tempUser.sat, foodItem, response);
+		if (collision) {
+			food.splice(key,1);
+			makeNom(1); 
+			currentUser.size+=3; 
+			toDelete = foodItem;
+			// return toDelete; 
+		}
+	})
+	return toDelete;
+}
 
 function massToRadius(m) {
+	// console.log('mass to radius' ,m);
 	return Math.sqrt(m / Math.PI) * 5;
 }
 
-function makeNom() {
-	food.push({
-		x: Math.floor(Math.random() * 2000),
-		y: Math.floor(Math.random() * 2000)
-	});
+function makeNom(num) {
+	var newFood = [];
+	num = num || 1;
+	while (num > 0) {
+		var tempFood = new C(
+			new V(Math.floor(Math.random() * 2000), Math.floor(Math.random() * 2000)),
+			5);
+		food.push(tempFood);
+		newFood.push(tempFood);
+		num--;
+	}
+	return newFood; 
 }
