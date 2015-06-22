@@ -32,6 +32,20 @@ var Blob = function(game, settings) {
 		ctx.stroke();
 	};
 }
+var Nom = function (game, nomGameObj){
+	this.pos = {x:nomGameObj.pos.x,y:nomGameObj.pos.y};
+	this.size = {x:10,y:10};
+
+	this.draw = function(ctx){
+		ctx.beginPath();
+		ctx.arc(nomGameObj.pos.x, nomGameObj.pos.y, 7, 0, Math.PI * 2, true);
+		ctx.closePath();
+		ctx.strokeStyle = "transparent";
+		ctx.fillStyle = nomGameObj.color; 
+		ctx.fill();
+		ctx.stroke();
+	}
+}
 $(window).on('load', function() {
 	initGame();
 })
@@ -53,4 +67,10 @@ function resetSize() {
 	globalHeight = 2000;
 	mousex = X = midX = Math.floor(globalWidth / 2);
 	mousey = Y = midY = Math.floor(globalHeight / 2);
+}
+
+function addNom(nomObj){
+
+	nomObj.color = getRandomColor();
+	gameSession.c.entities.create(Nom,nomObj); 
 }

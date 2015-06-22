@@ -1,8 +1,6 @@
 var colors = ['#1ABC9C','#2ECC71','#3498DB','#9B59B6','#E74C3C','#F1C40F'];
 function addPlayer (name, config) {
 	var settings = {
-		boundingBox: gameSession.c.collider.CIRCLE,
-		angle:0,
 		update: function () {
 
 			$canvas.clearCanvas();
@@ -65,3 +63,4 @@ function getServerSize (name) {
 		y: currentPlayerPositions[name].size
 	}
 }
+
