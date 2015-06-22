@@ -32,7 +32,6 @@ function addPlayer (name, config) {
 
 	if (newPlayer.broadcast) 
 		socket.emit('newPlayer', JSON.stringify(newPlayer));
-
 }
 
 function getRandomColor(){
