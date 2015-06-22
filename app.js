@@ -6,16 +6,20 @@ var _ = require('lodash');
 var SAT = require('sat');
 var cfenv = require('cfenv');
 
-var appEnv = cfenv.getAppEnv();
-var port = appEnv.port || 1337;
-server.listen(port, appEnv.bind);
 
 app.use(express.static('bower_components'));
 app.use(express.static('node_modules'));
 app.use(express.static('public'));
+
+var appEnv = cfenv.getAppEnv();
+var port = appEnv.port || 1337;
+server.listen(port, appEnv.bind);
+
 app.get('/', function(req, res, next) {
 	res.sendFile(__dirname + '/public/index.html');
 })
+
+
 var V = SAT.Vector;
 var C = SAT.Circle;
 var players = {};
