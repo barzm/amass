@@ -12,8 +12,7 @@ app.use(express.static('node_modules'));
 app.use(express.static('public'));
 
 var appEnv = cfenv.getAppEnv();
-server.listen(1337);
-// server.listen(appEnv.port, appEnv.bind);
+server.listen(appEnv.port, appEnv.bind);
 
 app.get('/', function(req, res, next) {
 	res.sendFile(__dirname + '/public/index.html');
