@@ -13,12 +13,7 @@ app.use(express.static('public'));
 
 var appEnv = cfenv.getAppEnv();
 
-if (appEnv.bind === 'localhost') {
-	server.listen(1337);
-} else {
-	server.listen(appEnv.port, appEnv.bind);
-}
-
+server.listen(appEnv.port, appEnv.bind);
 
 app.get('/', function(req, res, next) {
 	res.sendFile(__dirname + '/public/index.html');
@@ -32,15 +27,6 @@ var food = [];
 var newFood = [];
 var collisions = [];
 
-window.requestAnimFrame = (function() {
-	return window.requestAnimationFrame ||
-		window.webkitRequestAnimationFrame ||
-		window.mozRequestAnimationFrame ||
-		window.msRequestAnimationFrame ||
-		function(callback) {
-			window.setTimeout(callback, 1000 / 60);
-		};
-})();
 
 io.on('connection', function(socket) {
 	socket.on('playerMove', function(data) {
