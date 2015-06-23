@@ -2,16 +2,18 @@ var $canvas = $("canvas");
 var wrapper = document.getElementById('wrapper');
 var tempCanvas = document.getElementById('blobCanvas');
 var ctx = tempCanvas.getContext('2d');
-var X, Y, W, H, currentPlayerPositions, globalHeight, globalWidth, mousex, mousey, midX, midY, offsetX = 0, offsetY = 0,gameSession;
+var X, Y, W, H, currentPlayerPositions, globalHeight, globalWidth, mousex, mousey, midX, midY, offsetX = 0,
+	offsetY = 0,
+	gameSession;
 
-$(window).on('mousemove',function(event){
+$(window).on('mousemove', function(event) {
 	mousex = event.pageX;
 	mousey = event.pageY;
 })
 
 var Game = function() {
 	this.c = new Coquette(this, "blobCanvas", globalHeight, globalWidth, "transparent");
-	
+
 };
 
 var Blob = function(game, settings) {
@@ -22,7 +24,7 @@ var Blob = function(game, settings) {
 		x: 50,
 		y: 50
 	};
-	this.draw = function (ctx) {
+	this.draw = function(ctx) {
 		ctx.beginPath();
 		ctx.arc(this.center.x, this.center.y, this.size.x / 2, 0, Math.PI * 2, true);
 		ctx.closePath();
@@ -32,16 +34,22 @@ var Blob = function(game, settings) {
 		ctx.stroke();
 	};
 }
-var Nom = function (game, nomGameObj){
-	this.pos = {x:nomGameObj.pos.x,y:nomGameObj.pos.y};
-	this.size = {x:10,y:10};
+var Nom = function(game, nomGameObj) {
+	this.pos = {
+		x: nomGameObj.pos.x,
+		y: nomGameObj.pos.y
+	};
+	this.size = {
+		x: 10,
+		y: 10
+	};
 
-	this.draw = function(ctx){
+	this.draw = function(ctx) {
 		ctx.beginPath();
 		ctx.arc(nomGameObj.pos.x, nomGameObj.pos.y, 7, 0, Math.PI * 2, true);
 		ctx.closePath();
 		ctx.strokeStyle = "transparent";
-		ctx.fillStyle = nomGameObj.color; 
+		ctx.fillStyle = nomGameObj.color;
 		ctx.fill();
 		ctx.stroke();
 	}
@@ -53,13 +61,15 @@ $(window).on('load', function() {
 window.onresize = function() {
 	resetSize();
 }
+
 function initGame() {
 	resetSize();
 	window.scrollTo(midX, midY)
-	gameSession =  new Game();
+	gameSession = new Game();
 	var name = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 10);
-	addPlayer(name); 
+	addPlayer(name);
 }
+
 function resetSize() {
 	W = $(window).width() / 2;
 	H = $(window).height() / 2;
@@ -69,8 +79,8 @@ function resetSize() {
 	mousey = Y = midY = Math.floor(globalHeight / 2);
 }
 
-function addNom(nomObj){
+function addNom(nomObj) {
 
 	nomObj.color = getRandomColor();
-	gameSession.c.entities.create(Nom,nomObj); 
+	gameSession.c.entities.create(Nom, nomObj);
 }

@@ -1,13 +1,20 @@
-var colors = ['#1ABC9C','#2ECC71','#3498DB','#9B59B6','#E74C3C','#F1C40F'];
-function addPlayer (name, config) {
+var colors = ['#1ABC9C', '#2ECC71', '#3498DB', '#9B59B6', '#E74C3C', '#F1C40F'];
+
+function addPlayer(name, config) {
 	var settings = {
-		update: function () {
+		update: function() {
 
 			$canvas.clearCanvas();
 			this.center = getServerPosition(this.name);
 			this.size = getServerSize(this.name);
 			if (!config) {
-				socket.emit('playerMove', {name: this.name, mouse: {x: mousex,y: mousey}})
+				socket.emit('playerMove', {
+					name: this.name,
+					mouse: {
+						x: mousex,
+						y: mousey
+					}
+				})
 				window.scrollTo(this.center.x - W, this.center.y - H)
 			}
 		}
@@ -22,26 +29,26 @@ function addPlayer (name, config) {
 		settings.broadcast = true;
 		settings.name = name;
 		settings.center = {
-			x: midX/2+Math.random()*200,
-			y: midY+Math.random()*200
+			x: midX / 2 + Math.random() * 200,
+			y: midY + Math.random() * 200
 		};
 		settings.color = getRandomColor();
 	}
 
 	var newPlayer = gameSession.c.entities.create(Blob, settings);
 
-	if (newPlayer.broadcast) 
+	if (newPlayer.broadcast)
 		socket.emit('newPlayer', JSON.stringify(newPlayer));
 }
 
-function getRandomColor(){
-	return colors[Math.floor(Math.random()*6)];
+function getRandomColor() {
+	return colors[Math.floor(Math.random() * 6)];
 }
 
-function getServerPosition (name) {
+function getServerPosition(name) {
 	if (!currentPlayerPositions || !currentPlayerPositions[name]) {
 		return {
-			x: midX/2,
+			x: midX / 2,
 			y: midY
 		}
 	}
@@ -51,7 +58,7 @@ function getServerPosition (name) {
 	}
 }
 
-function getServerSize (name) {
+function getServerSize(name) {
 	if (!currentPlayerPositions || !currentPlayerPositions[name]) {
 		return {
 			x: 50,
@@ -63,4 +70,3 @@ function getServerSize (name) {
 		y: currentPlayerPositions[name].size
 	}
 }
-

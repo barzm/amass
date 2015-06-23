@@ -63,8 +63,11 @@ io.on('connection', function(socket) {
 			socket.emit('newFood', newFood);
 		}
 		if (toDelete) {
+			var loserID = toDelete[1];
+			toDelete = toDelete[0];
 			socket.broadcast.emit('delete', toDelete);
 			socket.emit('delete', toDelete);
+			socket.to(loserID).emit('FAILURE');
 		}
 		socket.emit('drawPlayers', players);
 		socket.broadcast.emit('drawPlayers', players);
@@ -114,11 +117,11 @@ function testCollision(currentUser) {
 				if (currentUser.size * 1.1 > otherUser.size) {
 					currentUser.size += otherUser.size;
 					delete players[otherUser.name];
-					toDelete = otherUser.name;
+					toDelete = [otherUser.name, otherUser.socketId];
 				} else if (otherUser.size * 1.1 > currentUser.size) {
 					otherUser.size += currentUser.size;
 					delete players[currentUser.name];
-					toDelete = currentUser.name;
+					toDelete = [currentUser.name, currentUser.socketId];
 				}
 			}
 		}
