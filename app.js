@@ -12,8 +12,7 @@ app.use(express.static('node_modules'));
 app.use(express.static('public'));
 
 var appEnv = cfenv.getAppEnv();
-// server.listen(appEnv.port, appEnv.bind);
-server.listen(1337);
+server.listen(appEnv.port, appEnv.bind);
 
 app.get('/', function(req, res, next) {
 	res.sendFile(__dirname + '/public/index.html');
@@ -114,11 +113,11 @@ function testCollision(currentUser) {
 			var response = new SAT.Response();
 			var collision = SAT.testCircleCircle(currentUser.sat, otherUser.sat, response);
 			if (collision) {
-				if (currentUser.size * 1.1 > otherUser.size) {
+				if (currentUser.size > otherUser.size * 1.1) {
 					currentUser.size += otherUser.size;
 					delete players[otherUser.name];
 					toDelete = [otherUser.name, otherUser.socketId];
-				} else if (otherUser.size * 1.1 > currentUser.size) {
+				} else if (otherUser.size > currentUser.size * 1.1) {
 					otherUser.size += currentUser.size;
 					delete players[currentUser.name];
 					toDelete = [currentUser.name, currentUser.socketId];
